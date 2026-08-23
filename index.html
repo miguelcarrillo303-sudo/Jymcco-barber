@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ç<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -435,7 +435,7 @@
       </form>
     </div>
 
-    <!-- CITAS -->
+    <!-- CITAS (OCULTO PARA CLIENTES, SOLO ADMIN) -->
     <div id="tab-citas" class="tab-content">
       <h2 class="section-title">Citas</h2>
       <p class="section-subtitle">Revisa las reservas organizadas por días de la semana.</p>
@@ -506,8 +506,8 @@
         <h3 style="font-size:16px; margin-bottom: 10px; color: #ffffff;">Descargar App</h3>
         <div class="qr-container">
           <p style="font-size: 13px; color: #8fae8f; margin-bottom: 10px;">Escanea este código QR para abrir o descargar la aplicación</p>
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://jymccobarber.app" alt="Código QR App" class="qr-img">
-          <a href="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://jymccobarber.app" download="QR_JymccoBarber.png" class="btn btn-primary" style="display:inline-block; text-decoration:none; margin-top:10px; width:auto; padding:10px 20px;">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://miguelcarrillo303-sudo.github.io/Jymcco-barber/" alt="Código QR App" class="qr-img">
+          <a href="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://miguelcarrillo303-sudo.github.io/Jymcco-barber/" download="QR_JymccoBarber.png" class="btn btn-primary" style="display:inline-block; text-decoration:none; margin-top:10px; width:auto; padding:10px 20px;">
             📥 Descargar QR
           </a>
         </div>
@@ -516,7 +516,7 @@
 
   </div>
 
-  <div class="bottom-nav">
+  <div class="bottom-nav" id="bottom-nav-container">
     <button class="nav-item active" onclick="switchTab('servicios', this)">
       <span class="nav-icon">✂</span>
       <span>Servicios</span>
@@ -525,10 +525,7 @@
       <span class="nav-icon">📅</span>
       <span>Reservar</span>
     </button>
-    <button class="nav-item" onclick="switchTab('citas', this)">
-      <span class="nav-icon">📋</span>
-      <span>Citas</span>
-    </button>
+    <!-- El botón de citas general ya no sale aquí por defecto para los clientes -->
     <button class="nav-item" onclick="switchTab('resenas', this)">
       <span class="nav-icon">⭐</span>
       <span>Reseñas</span>
@@ -620,6 +617,19 @@
       if (pass === "0356") { 
         isOwnerUnlocked = true;
         document.getElementById('owner-btn-text').innerText = "Panel Dueño";
+        
+        // Añadir el botón de "Citas" al menú inferior al desbloquear como dueño
+        const navContainer = document.getElementById('bottom-nav-container');
+        if (!document.getElementById('nav-citas-btn')) {
+          const citasNavBtn = document.createElement('button');
+          citasNavBtn.id = 'nav-citas-btn';
+          citasNavBtn.className = 'nav-item';
+          citasNavBtn.innerHTML = `<span class="nav-icon">📋</span><span>Citas</span>`;
+          citasNavBtn.onclick = function() { switchTab('citas', this); };
+          // Insertarlo antes de reseñas
+          navContainer.insertBefore(citasNavBtn, navContainer.lastElementChild);
+        }
+
         switchTab('owner');
       } else {
         alert("PIN incorrecto");
@@ -705,10 +715,12 @@
     citas.unshift(nuevaCita);
     localStorage.setItem('jymcco_citas', JSON.stringify(citas));
 
-    alert(`¡Reserva confirmada con éxito!\nTus datos han quedado guardados automáticamente.`);
+    alert(`¡Reserva confirmada con éxito!\nTus datos han quedado guardados automáticamente. Puedes consultarlos pulsando sobre el logo de la barbería.`);
     
+    // Redirigir a servicios y abrir el perfil del usuario automáticamente
     const navButtons = document.querySelectorAll('.nav-item');
-    switchTab('citas', navButtons[2]);
+    switchTab('servicios', navButtons[0]);
+    toggleProfileModal();
   }
 
   function toggleProfileModal() {
@@ -985,7 +997,6 @@
 
   renderServices();
   checkSchedule();
-  renderAppointments();
 </script>
 </body>
 </html>
