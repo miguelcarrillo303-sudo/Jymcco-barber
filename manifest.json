@@ -2,6 +2,7 @@
   "name": "Jymcco Barber",
   "short_name": "Jymccobarber",
   "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#080a08",
   "theme_color": "#0d110d",
